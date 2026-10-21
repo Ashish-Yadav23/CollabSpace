@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: collabspace-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build --workspace=server
+    startCommand: npm run start:api
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRY_HOURS
+        value: "24"
+      - key: DOC_TOKEN_EXPIRY_SECONDS
+        value: "3600"
+      - key: CLIENT_URL
+        sync: false
+
+  - type: web
+    name: collabspace-collab
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build --workspace=server
+    startCommand: npm run start:collab
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        fromService:
+          type: web
+          name: collabspace-api
+          envVarKey: MONGODB_URI
+      - key: JWT_SECRET
+        fromService:
+          type: web
+          name: collabspace-api
+          envVarKey: JWT_SECRET
+      - key: DOC_TOKEN_EXPIRY_SECONDS
+        value: "3600"
+      - key: CLIENT_URL
+        fromService:
+          type: web
+          name: collabspace-api
+          envVarKey: CLIENT_URL
