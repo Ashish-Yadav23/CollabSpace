@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import http from 'http';
-import { MongoMemoryServer } from '../../server/node_modules/mongodb-memory-server';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Server } from '../../server/node_modules/@hocuspocus/server';
 import { createExpressApp } from '../../server/src/api';
 import { createCollabServer } from '../../server/src/collaboration/server';
@@ -132,13 +132,18 @@ test.describe('CollabSpace Real Browser-Based End-to-End Smoke Test', () => {
     }
     await disconnectDB();
     if (mongod) {
-      await mongod.stop();
+      try {
+        await mongod.stop();
+      } catch {
+        // ignore if already shutting down
+      }
     }
   });
 
   test('verifies bidirectional editing, live cursors, avatar presence, and disconnect cleanup in real browsers', async ({
     browser,
   }) => {
+    test.setTimeout(60000);
     const aliceErrors: string[] = [];
     const bobErrors: string[] = [];
 

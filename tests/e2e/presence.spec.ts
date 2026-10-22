@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { MongoMemoryServer } from '../../server/node_modules/mongodb-memory-server';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { Server } from '../../server/node_modules/@hocuspocus/server';
 import { createCollabServer } from '../../server/src/collaboration/server';
 import { DocumentModel } from '../../server/src/db/models/Document';

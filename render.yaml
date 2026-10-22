@@ -3,7 +3,7 @@ services:
     name: collabspace-api
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build --workspace=server
+    buildCommand: npm install --include=dev && npm run build --workspace=server
     startCommand: npm run start:api
     healthCheckPath: /api/health
     envVars:
@@ -24,7 +24,7 @@ services:
     name: collabspace-collab
     runtime: node
     plan: free
-    buildCommand: npm install && npm run build --workspace=server
+    buildCommand: npm install --include=dev && npm run build --workspace=server
     startCommand: npm run start:collab
     healthCheckPath: /
     envVars:

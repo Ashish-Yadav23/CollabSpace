@@ -1,22 +1,31 @@
 import { defineConfig } from 'vitest/config';
 import path from 'path';
+import fs from 'fs';
+
+function resolveModule(name: string): string {
+  const serverPath = path.resolve(__dirname, 'server/node_modules', name);
+  if (fs.existsSync(serverPath)) return serverPath;
+  const rootPath = path.resolve(__dirname, 'node_modules', name);
+  if (fs.existsSync(rootPath)) return rootPath;
+  return name;
+}
 
 export default defineConfig({
   resolve: {
     alias: {
-      yjs: path.resolve(__dirname, 'server/node_modules/yjs'),
-      supertest: path.resolve(__dirname, 'server/node_modules/supertest'),
-      'mongodb-memory-server': path.resolve(__dirname, 'server/node_modules/mongodb-memory-server'),
-      mongoose: path.resolve(__dirname, 'server/node_modules/mongoose'),
-      bcryptjs: path.resolve(__dirname, 'server/node_modules/bcryptjs'),
-      jsonwebtoken: path.resolve(__dirname, 'server/node_modules/jsonwebtoken'),
-      zod: path.resolve(__dirname, 'server/node_modules/zod'),
-      express: path.resolve(__dirname, 'server/node_modules/express'),
-      cors: path.resolve(__dirname, 'server/node_modules/cors'),
-      helmet: path.resolve(__dirname, 'server/node_modules/helmet'),
-      nanoid: path.resolve(__dirname, 'server/node_modules/nanoid'),
-      ws: path.resolve(__dirname, 'server/node_modules/ws'),
-      '@hocuspocus/provider': path.resolve(__dirname, 'server/node_modules/@hocuspocus/provider'),
+      yjs: resolveModule('yjs'),
+      supertest: resolveModule('supertest'),
+      'mongodb-memory-server': resolveModule('mongodb-memory-server'),
+      mongoose: resolveModule('mongoose'),
+      bcryptjs: resolveModule('bcryptjs'),
+      jsonwebtoken: resolveModule('jsonwebtoken'),
+      zod: resolveModule('zod'),
+      express: resolveModule('express'),
+      cors: resolveModule('cors'),
+      helmet: resolveModule('helmet'),
+      nanoid: resolveModule('nanoid'),
+      ws: resolveModule('ws'),
+      '@hocuspocus/provider': resolveModule('@hocuspocus/provider'),
     },
   },
   test: {
@@ -25,5 +34,6 @@ export default defineConfig({
     environment: 'node',
     testTimeout: 60000,
     hookTimeout: 60000,
+    fileParallelism: false,
   },
 });
